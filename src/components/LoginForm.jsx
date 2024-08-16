@@ -10,7 +10,6 @@ const LoginForm = ({ onLoginSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Usa la ruta relativa /iol/token para que el proxy maneje la redirección
       const response = await axios.post('/iol/token', {
         username,
         password,
@@ -28,7 +27,19 @@ const LoginForm = ({ onLoginSuccess }) => {
         setMessage('Error al crear el token.');
       }
     } catch (error) {
-      setMessage('Error al crear el token: ' + error.message);
+      // Verifica si es un problema de red, CORS, o HTTPS
+      if (!error.response) {
+        setMessage('No se pudo conectar al servidor. Verifique su conexión a Internet o si el servidor está accesible.');
+      } else if (error.response.status === 401) {
+        setMessage('Credenciales incorrectas. Por favor, intente nuevamente.');
+      } else if (error.response.status === 403) {
+        setMessage('No tiene permiso para acceder a este recurso.');
+      } else if (error.response.status === 404) {
+        setMessage('No se encontró el recurso solicitado en el servidor.');
+      } else {
+        setMessage('Error al crear el token: ' + error.message);
+      }
+      console.error('Detalles del error:', error);
     }
   };
 
