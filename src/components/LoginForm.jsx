@@ -10,7 +10,7 @@ const LoginForm = ({ onLoginSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Usa la ruta relativa /api/token para que el proxy maneje la redirección
+      // Usa la ruta relativa /iol/token para que el proxy maneje la redirección
       const response = await axios.post('/iol/token', {
         username,
         password,
